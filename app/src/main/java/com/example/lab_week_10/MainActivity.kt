@@ -3,34 +3,34 @@ package com.example.lab_week_10
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
-import android.widget.TextView // <-- 1. TAMBAHKAN import ini
-
-// 2. HAPUS import yang salah: import android.provider.Settings.Global.getString
-
+import android.widget.TextView
+import kotlin.getValue
+import com.example.lab_week_10.viewmodels.TotalViewModel
+import androidx.lifecycle.ViewModelProvider
 class MainActivity : AppCompatActivity() {
-    private var total: Int = 0
+    private val viewModel by lazy {
+        ViewModelProvider(this)[TotalViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        total = 0
-        updateText(total)
-
-        findViewById<Button>(R.id.button_increment).setOnClickListener {
-            incrementTotal()
-        }
+        prepareViewModel()
     }
-
-    private fun incrementTotal() {
-        total++
-        updateText(total)
-    }
-
 
     private fun updateText(total: Int) {
-        // Sekarang findViewById dan getString akan dikenali
         findViewById<TextView>(R.id.text_total).text =
             getString(R.string.text_total, total)
+    }
+
+    private fun prepareViewModel(){
+        viewModel.total.observe(this) { total ->
+            updateText(total)
+        }
+
+        findViewById<Button>(R.id.button_increment).setOnClickListener {
+            viewModel.incrementTotal()
+        }
     }
 }
