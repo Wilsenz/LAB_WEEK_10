@@ -1,21 +1,26 @@
 package com.example.lab_week_10.database
 
+import androidx.room.ColumnInfo
+import androidx.room.Embedded // <- Import ini penting
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.ColumnInfo
 
+// Entity utama tetap sama [cite: 486]
 @Entity(tableName = "total")
-// Every variables declared inside this class counts
-// as declaring a new column inside the table
 data class Total(
-    // @PrimaryKey sets a column into a primary key
-    @PrimaryKey(autoGenerate = true)
-    // @ColumnInfo sets the name of the column
-    @ColumnInfo(name = "id")
-    // The variable name can be different from the column name
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) // [cite: 489]
+    @ColumnInfo(name = "id") // [cite: 491]
+    val id: Long = 0, // [cite: 493]
 
-    // Here we set another column to store the total value
-    @ColumnInfo(name = "total")
-    val total: Int = 0,
+    // Kolom 'total' sekarang adalah objek @Embedded [cite: 496-497]
+    @Embedded
+    val total: TotalObject
+)
+
+// Ini adalah kelas objek baru yang akan disematkan [cite: 501]
+data class TotalObject(
+    @ColumnInfo(name = "value") // [cite: 503]
+    val value: Int,
+    @ColumnInfo(name = "date") // [cite: 504]
+    val date: String
 )
